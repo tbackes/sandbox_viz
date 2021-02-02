@@ -9,42 +9,72 @@ export const message = {
     "DEFAULT": [
       {
         "dimension": [
-          "0-14"
+          "1"
         ],
         "metric": [
-          "1"
+          "5"
+        ],
+        "metric_lower": [
+          "4"
+        ],
+        "metric_upper": [
+          "6"
         ]
       },
       {
         "dimension": [
-          "15-24"
+          "2"
         ],
         "metric": [
-          "1"
+          "4"
+        ],
+        "metric_lower": [
+          "4"
+        ],
+        "metric_upper": [
+          "6"
         ]
       },
       {
         "dimension": [
-          "25-54"
+          "3"
         ],
         "metric": [
-          "1"
+          "4.5"
+        ],
+        "metric_lower": [
+          "4"
+        ],
+        "metric_upper": [
+          "6"
         ]
       },
       {
         "dimension": [
-          "55-64"
+          "4"
         ],
         "metric": [
-          "1"
+          "5.1"
+        ],
+        "metric_lower": [
+          "4"
+        ],
+        "metric_upper": [
+          "6"
         ]
       },
       {
         "dimension": [
-          "65+"
+          "5"
         ],
         "metric": [
-          "1"
+          "4"
+        ],
+        "metric_lower": [
+          "4"
+        ],
+        "metric_upper": [
+          "6"
         ]
       }
     ]
@@ -53,8 +83,8 @@ export const message = {
     "dimension": [
       {
         "id": "qt_yvecch1jgc",
-        "name": "Age Group",
-        "type": "TEXT",
+        "name": "Timestep",
+        "type": "NUMBER",
         "concept": "DIMENSION"
       }
     ],
