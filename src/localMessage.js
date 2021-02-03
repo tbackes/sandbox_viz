@@ -1,80 +1,74 @@
-/**
- * This file provides the mock "data" received
- * by your visualization code when you develop
- * locally.
- *
- */
 export const message = {
   "tables": {
     "DEFAULT": [
       {
         "dimension": [
-          "1"
+          1
         ],
         "metric": [
-          "5", "6"
+          1.5, 4.5
         ],
         "metric_lower": [
-          "4.1", "5.1"
+          0.5, 4.2
         ],
         "metric_upper": [
-          "6", "7.1"
+          2, 5
         ]
       },
       {
         "dimension": [
-          "2"
+          2
         ],
         "metric": [
-          "4", "5"
+          1.7, 2.5
         ],
         "metric_lower": [
-          "4", "4.3"
+          1, 1.5
         ],
         "metric_upper": [
-          "4.5", "5.3"
+          3, 3.1
         ]
       },
       {
         "dimension": [
-          "3"
+          3
         ],
         "metric": [
-          "4.5", "5.5"
+          1.5, 3
         ],
         "metric_lower": [
-          "4", "5"
+          0.8, 2.9
         ],
         "metric_upper": [
-          "5.1", "5.9"
+          2.5, 4.1
         ]
       },
       {
         "dimension": [
-          "4"
+          4
         ],
         "metric": [
-          "5.1"
+          1.6
         ],
         "metric_lower": [
-          "4.1"
+          1.2
         ],
         "metric_upper": [
-          "5.9"
+          4
         ]
       },
       {
         "dimension": [
-          "5"
+          5
         ],
         "metric": [
-          "3.8"
+          1.4
         ],
         "metric_lower": [
-          "3.5"
+          0.9
         ],
         "metric_upper": [
-          "6.1"
+          3.5
         ]
       }
     ]
@@ -82,16 +76,16 @@ export const message = {
   "fields": {
     "dimension": [
       {
-        "id": "qt_yvecch1jgc",
-        "name": "Timestep",
+        "id": "qt_a62c3nqogc",
+        "name": "Index",
         "type": "NUMBER",
         "concept": "DIMENSION"
       }
     ],
     "metric": [
       {
-        "id": "qt_zvecch1jgc",
-        "name": "Metric 1",
+        "id": "qt_b5537nqogc",
+        "name": "est",
         "type": "NUMBER",
         "concept": "METRIC"
       },
@@ -104,8 +98,8 @@ export const message = {
     ],
     "metric_lower": [
       {
-        "id": "qt_zvecc578gc",
-        "name": "Metric 1 - 95% CI (Lower)",
+        "id": "qt_4x3c3nqogc",
+        "name": "ci_lower",
         "type": "NUMBER",
         "concept": "METRIC"
       },
@@ -118,8 +112,8 @@ export const message = {
     ],
     "metric_upper": [
       {
-        "id": "qt_zve23578gc",
-        "name": "Metric 1 - 95% CI (Upper)",
+        "id": "qt_ec9ldoqogc",
+        "name": "ci_upper",
         "type": "NUMBER",
         "concept": "METRIC"
       },
@@ -132,13 +126,37 @@ export const message = {
     ]
   },
   "style": {
-    "barColor": {
+    "metricLineWeight1": {
+      "value": 2,
+      "defaultValue": 2
+    },
+    "metricColor1": {
       "value": {
-        "color": "#222222"
+        "color": "#0072f0"
       },
       "defaultValue": {
-        "color": "#222222"
+        "color": "#0072f0"
       }
+    },
+    "metricShowPoints1": {
+      "value": true,
+      "defaultValue": true
+    },
+    "metricLineWeight2": {
+      "value": 2,
+      "defaultValue": 2
+    },
+    "metricColor2": {
+      "value": {
+        "color": "#00b6cb"
+      },
+      "defaultValue": {
+        "color": "#00b6cb"
+      }
+    },
+    "metricShowPoints2": {
+      "value": true,
+      "defaultValue": true
     }
   },
   "theme": {

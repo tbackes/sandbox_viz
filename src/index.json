@@ -45,16 +45,54 @@
   ],
   "style": [
     {
-      "id": "barStyling",
-      "label": "Bar Styles",
+      "id": "metricStyles1",
+      "label": "Metric #1",
       "elements": [
         {
-          "id": "barColor",
-          "label": "Bar Color",
-          "type": "FILL_COLOR",
+          "id": "metricLineWeight1",
+          "label": "Line Weight 1",
+          "type": "LINE_WEIGHT",
+          "defaultValue": "2"
+        },
+        {
+          "id": "metricColor1",
+          "label": "Line Color 1",
+          "type": "BORDER_COLOR",
           "defaultValue": {
             "color": "#1E555C"
           }
+        },
+        {
+          "id": "metricShowPoints1",
+          "label": "Show Points",
+          "type": "CHECKBOX",
+          "defaultValue": "2"
+        }
+      ]
+    },
+    {
+      "id": "metricStyles2",
+      "label": "Metric #1",
+      "elements": [
+        {
+          "id": "metricLineWeight2",
+          "label": "Line Weight 2",
+          "type": "LINE_WEIGHT",
+          "defaultValue": "2"
+        },
+        {
+          "id": "metricColor2",
+          "label": "Line Color 2",
+          "type": "BORDER_COLOR",
+          "defaultValue": {
+            "color": "#1E555C"
+          }
+        },
+        {
+          "id": "metricShowPoints2",
+          "label": "Show Points",
+          "type": "CHECKBOX",
+          "defaultValue": "2"
         }
       ]
     }

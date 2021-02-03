@@ -19,100 +19,27 @@ const styleVal = (message, styleId) => {
     : message.style[styleId].defaultValue;
 };
 
+const hex_to_rgba_str = (hex_color, opacity) => {
+  console.log('hex_color: ' + hex_color)
+  var hex_strip = hex_color.replace(new RegExp("^#"),"")
+  console.log('hex_strip: ' + hex_strip)
+  console.log('hex_strip.length: ' + hex_strip.length)
+  hex_strip = (hex_strip.length==3)? hex_strip+hex_strip : hex_strip;
+  var rgba = 'rgba(' 
+    + parseInt(hex_strip.substring(0,2), 16) + ',' 
+    + parseInt(hex_strip.substring(2,4), 16) + ',' 
+    + parseInt(hex_strip.substring(4,6), 16) + ','
+    + opacity + ')';
+  console.log('rgba: ' + rgba)
+  return rgba
+}
+
 const drawViz = message => {
-  // const margin = { left: 20, right: 20, top: 20, bottom: 20 };
-  // const height = dscc.getHeight() - 10;
-  // const width = dscc.getWidth();
-
-  // const chartHeight = height - margin.top - margin.bottom;
-  // const chartWidth = width - margin.left - margin.right;
-
-  // // remove existing svg
-  // d3.select("body")
-  //   .selectAll("svg")
-  //   .remove();
-
-  // // make a canvas
-  // const svg = d3
-  //   .select("body")
-  //   .append("svg")
-  //   .attr("width", width)
-  //   .attr("height", height);
-
-  // // make an svg for the bar chart
-  // const chartSvg = svg
-  //   .append("svg")
-  //   .attr("x", margin.left)
-  //   .attr("y", margin.top)
-  //   .attr("width", chartWidth)
-  //   .attr("height", chartHeight);
-
-  // // xScale to distribute bars
-  // const xScale = d3
-  //   .scaleBand()
-  //   .domain(message.tables.DEFAULT.map(d => d.dimension[0]))
-  //   .range([0, chartWidth])
-  //   .paddingInner(0.3);
-
-  // // yScale to size bars
-  // const yScale = d3
-  //   .scaleLinear()
-  //   .domain([0, d3.max(message.tables.DEFAULT.map(d => d.metric[0]))])
-  //   .range([0, chartHeight]);
-
-  // // get the user-selected bar color
-  // let barColor = styleVal(message, "barColor");
-
-  // // add bars
-  // const bars = chartSvg
-  //   .append("g")
-  //   .attr("class", "bars")
-  //   .selectAll("rect.bars")
-  //   .data(message.tables.DEFAULT)
-  //   .enter()
-  //   .append("rect")
-  //   .attr("x", d => xScale(d.dimension[0]))
-  //   .attr("y", d => chartHeight - yScale(d.metric[0]))
-  //   .attr("width", xScale.bandwidth())
-  //   .attr("height", d => yScale(d.metric[0]))
-  //   .attr("fill", barColor);
-
-  // // add text
-  // const text = svg
-  //   .append("g")
-  //   .selectAll("text")
-  //   .data(message.tables.DEFAULT)
-  //   .enter()
-  //   .append("text")
-  //   .attr(
-  //     "x",
-  //     d => xScale(d.dimension[0]) + xScale.bandwidth() / 2 + margin.left
-  //   )
-  //   .attr("y", height - margin.bottom / 4)
-  //   .attr("text-anchor", "middle")
-  //   .attr("fill", barColor)
-  //   .text(d => d.dimension[0]);
-
-  // // set margins + canvas size
-  // const margin = { top: 10, bottom: 50, right: 10, left: 10 };
-  // const height = dscc.getHeight() - margin.top - margin.bottom;
-  // const width = dscc.getWidth() - margin.left - margin.right;
-
-  // // remove the svg if it already exists
-  // if (document.querySelector("svg")) {
-  //   let oldSvg = document.querySelector("svg");
-  //   oldSvg.parentNode.removeChild(oldSvg);
-  // }
 
   // set margins + canvas size
   const margin = { top: 10, bottom: 50, right: 10, left: 10 };
   const height = dscc.getHeight() - margin.top - margin.bottom;
   const width = dscc.getWidth() - margin.left - margin.right;
-
-  // console.log('Height: ' + height)
-  // console.log('Margin Top: ' + margin.top)
-  // console.log('Margin Bottom: ' + margin.bottom)
-  // console.log('GetHeight(): ' + dscc.getHeight())
 
   // remove the div if it already exists
   if (document.querySelector("div")) {
@@ -120,6 +47,7 @@ const drawViz = message => {
     oldDiv.parentNode.removeChild(oldDiv);
   }
 
+  // create div for plotly plot
   const myDiv = document.createElement('div');
   myDiv.setAttribute("height", `${height}px`);
   myDiv.setAttribute("width", `${width}px`);
@@ -127,7 +55,9 @@ const drawViz = message => {
   document.body.appendChild(myDiv);
 
   // write your visualization code here
-  console.log("I'm the callback and I was passed this data: " + JSON.stringify(message.tables.DEFAULT, null, '  '));
+  console.log("I'm the callback and I was passed this data: " + JSON.stringify(message.style, null, '  '));
+  console.log('color: ' + message.style['metricColor1'].value['color'] + '; ' + hex_to_rgba_str(message.style['metricColor1'].value['color'], 1))
+  console.log('metricLineWeight: ' + message.style['metricLineWeight1'])
 
   // console.log('DEFAULT')
   // console.log(message.tables.DEFAULT)
@@ -144,14 +74,30 @@ const drawViz = message => {
   console.log('# Series: ' + message.tables.DEFAULT[0].metric.length)
   console.log('Metric name: ' + message.fields.metric_upper[i])
 
+  // loop through metrics and add traces
   var data = []
   var i;
   for (i=0; i<message.tables.DEFAULT[0].metric.length; i++){
+
+    // Gather all style parameters
+    var metricLineWeight =  message.style['metricLineWeight'+(i+1)].value
+    ? message.style['metricLineWeight'+(i+1)].value
+    : message.style['metricLineWeight'+(i+1)].defaultValue;
+
+    var metricLineColor =  message.style['metricColor'+(i+1)].value
+    ? message.style['metricColor'+(i+1)].value['color']
+    : message.style['metricColor'+(i+1)].defaultValue['color'];
+
+    var metricShowPoints =  message.style['metricShowPoints'+(i+1)].value
+    ? message.style['metricShowPoints'+(i+1)].value
+    : message.style['metricShowPoints'+(i+1)].defaultValue;
+
+    // trace for lower bound of CI
     var trace_lower = {
       x: message.tables.DEFAULT.map(d => d.dimension[0]),
       y: message.tables.DEFAULT.map(d => d.metric_lower[i]),
       line: {width: 0}, 
-      marker: {color: "444"}, 
+      marker: {color: hex_to_rgba_str(metricLineColor, 0.3)}, 
       mode: "lines", 
       name: message.fields.metric_lower[i].name, 
       type: "scatter",
@@ -160,14 +106,15 @@ const drawViz = message => {
       visible: 'legendonly',
     };
 
+    // trace for upper bound of CI
     var trace_upper = {
       x: message.tables.DEFAULT.map(d => d.dimension[0]),
       y: message.tables.DEFAULT.map(d => d.metric_upper[i]),
       line: {width: 0}, 
       fill: "tonexty", 
-      fillcolor: "rgba(68, 68, 68, 0.3)", 
+      fillcolor: hex_to_rgba_str(metricLineColor, 0.3), 
       line: {width: 0}, 
-      marker: {color: "444"}, 
+      marker: {color: hex_to_rgba_str(metricLineColor, 0.3)}, 
       mode: "lines", 
       name: message.fields.metric_upper[i].name, 
       type: "scatter",
@@ -177,12 +124,13 @@ const drawViz = message => {
       showlegend: false
     };
 
+    // trace for metric trend line
     var trace_metric = {
       x: message.tables.DEFAULT.map(d => d.dimension[0]),
       y: message.tables.DEFAULT.map(d => d.metric[i]),
       customdata: message.tables.DEFAULT.map(d => [d.metric_lower[i], d.metric_upper[i]]),
-      line: {color: "rgb(31, 119, 180)"}, 
-      mode: "lines", 
+      line: {color: metricLineColor}, 
+      mode: (metricShowPoints)? 'lines+markers' : 'lines', 
       name: message.fields.metric[i].name, 
       type: "lines",
       legendgroup: message.fields.metric[i].name, 
