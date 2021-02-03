@@ -15,10 +15,10 @@ export const message = {
           "5"
         ],
         "metric_lower": [
-          "4"
+          "4.1"
         ],
         "metric_upper": [
-          "6"
+          "6.1"
         ]
       },
       {
@@ -43,10 +43,10 @@ export const message = {
           "4.5"
         ],
         "metric_lower": [
-          "4"
+          "4.2"
         ],
         "metric_upper": [
-          "6"
+          "6.5"
         ]
       },
       {
@@ -57,10 +57,10 @@ export const message = {
           "5.1"
         ],
         "metric_lower": [
-          "4"
+          "4.5"
         ],
         "metric_upper": [
-          "6"
+          "6.2"
         ]
       },
       {

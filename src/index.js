@@ -5,7 +5,7 @@ const local = require('./localMessage.js');
 
 // change this to 'true' for local development
 // change this to 'false' before deploying
-export const LOCAL = false;
+export const LOCAL = true;
 
 // parse the style value
 const styleVal = (message, styleId) => {
@@ -126,42 +126,84 @@ const drawViz = message => {
 
   document.body.appendChild(myDiv);
 
-  // // write your visualization code here
-  // console.log("I'm the callback and I was passed this data: " + JSON.stringify(message.tables.DEFAULT, null, '  '));
+  // write your visualization code here
+  console.log("I'm the callback and I was passed this data: " + JSON.stringify(message.tables.DEFAULT, null, '  '));
 
-  // console.log('DEFAULT')
-  // console.log(message.tables.DEFAULT)
+  console.log('DEFAULT')
+  console.log(message.tables.DEFAULT)
 
-  // console.log('Dimension')
-  // console.log(message.tables.DEFAULT.map(d => d.metric[0]))
-  // console.log('Metric')
-  // console.log(message.tables.DEFAULT.map(d => d.metric[0]))
-  // console.log('Lower')
-  // console.log(message.tables.DEFAULT.map(d => d.metric_lower[0]))
-  // console.log('Upper')
-  // console.log(message.tables.DEFAULT.map(d => d.metric_upper[0]))
+  console.log('Dimension')
+  console.log(message.tables.DEFAULT.map(d => d.metric[0]))
+  console.log('Metric')
+  console.log(message.tables.DEFAULT.map(d => d.metric[0]))
+  console.log('Lower')
+  console.log(message.tables.DEFAULT.map(d => d.metric_lower[0]))
+  console.log('Upper')
+  console.log(message.tables.DEFAULT.map(d => d.metric_upper[0]))
 
 
 
-  var data = [
-    {
-      x: message.tables.DEFAULT.map(d => d.dimension[0]),
-      y: message.tables.DEFAULT.map(d => d.metric_lower[0]),
-      type: 'bar'
-    },
-    {
-      x: message.tables.DEFAULT.map(d => d.dimension[0]),
-      y: message.tables.DEFAULT.map(d => d.metric[0]),
-      type: 'bar'
-    },
-    {
-      x: message.tables.DEFAULT.map(d => d.dimension[0]),
-      y: message.tables.DEFAULT.map(d => d.metric_upper[0]),
-      type: 'bar'
-    }
-  ];
+  // var data = [
+  //   {
+  //     x: message.tables.DEFAULT.map(d => d.dimension[0]),
+  //     y: message.tables.DEFAULT.map(d => d.metric_lower[0]),
+  //     type: 'bar'
+  //   },
+  //   {
+  //     x: message.tables.DEFAULT.map(d => d.dimension[0]),
+  //     y: message.tables.DEFAULT.map(d => d.metric[0]),
+  //     type: 'bar'
+  //   },
+  //   {
+  //     x: message.tables.DEFAULT.map(d => d.dimension[0]),
+  //     y: message.tables.DEFAULT.map(d => d.metric_upper[0]),
+  //     type: 'bar'
+  //   }
+  // ];
 
-  plotly.newPlot(myDiv, data, {height: height});
+  var trace1 = {
+    x: message.tables.DEFAULT.map(d => d.dimension[0]),
+    y: message.tables.DEFAULT.map(d => d.metric_lower[0]),
+    line: {width: 0}, 
+    marker: {color: "444"}, 
+    mode: "lines", 
+    name: "Lower Bound", 
+    type: "scatter"
+  };
+
+  var trace2 = {
+    x: message.tables.DEFAULT.map(d => d.dimension[0]),
+    y: message.tables.DEFAULT.map(d => d.metric[0]),
+    fill: "tonexty", 
+    fillcolor: "rgba(68, 68, 68, 0.3)", 
+    line: {color: "rgb(31, 119, 180)"}, 
+    mode: "lines", 
+    name: "Measurement", 
+    type: "scatter"
+  };
+
+  var trace3 = {
+    x: message.tables.DEFAULT.map(d => d.dimension[0]),
+    y: message.tables.DEFAULT.map(d => d.metric_upper[0]),
+    line: {width: 0}, 
+    fill: "tonexty", 
+    fillcolor: "rgba(68, 68, 68, 0.3)", 
+    line: {width: 0}, 
+    marker: {color: "444"}, 
+    mode: "lines", 
+    name: "Upper Bound", 
+    type: "scatter"
+  };
+
+  var data = [trace1, trace2, trace3]
+  var layout = {
+    height: height,
+    showlegend: false,
+    title: 'Test this out!',
+    yaxis: {title: 'Prevalence', rangemode: 'tozero'}
+  };
+
+  plotly.newPlot(myDiv, data, layout);
 };
 
 // renders locally
