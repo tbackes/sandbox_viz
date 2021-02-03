@@ -109,10 +109,10 @@ const drawViz = message => {
   const height = dscc.getHeight() - margin.top - margin.bottom;
   const width = dscc.getWidth() - margin.left - margin.right;
 
-  console.log('Height: ' + height)
-  console.log('Margin Top: ' + margin.top)
-  console.log('Margin Bottom: ' + margin.bottom)
-  console.log('GetHeight(): ' + dscc.getHeight())
+  // console.log('Height: ' + height)
+  // console.log('Margin Top: ' + margin.top)
+  // console.log('Margin Bottom: ' + margin.bottom)
+  // console.log('GetHeight(): ' + dscc.getHeight())
 
   // remove the div if it already exists
   if (document.querySelector("div")) {
@@ -129,8 +129,8 @@ const drawViz = message => {
   // write your visualization code here
   console.log("I'm the callback and I was passed this data: " + JSON.stringify(message.tables.DEFAULT, null, '  '));
 
-  console.log('DEFAULT')
-  console.log(message.tables.DEFAULT)
+  // console.log('DEFAULT')
+  // console.log(message.tables.DEFAULT)
 
   console.log('Dimension')
   console.log(message.tables.DEFAULT.map(d => d.metric[0]))
@@ -141,70 +141,58 @@ const drawViz = message => {
   console.log('Upper')
   console.log(message.tables.DEFAULT.map(d => d.metric_upper[0]))
 
+  console.log('# Series: ' + message.tables.DEFAULT[0].metric.length)
+  console.log('Metric name: ' + message.fields.metric_upper[i])
 
+  var data = []
+  var i;
+  for (i=0; i<message.tables.DEFAULT[0].metric.length; i++){
+    var trace_lower = {
+      x: message.tables.DEFAULT.map(d => d.dimension[0]),
+      y: message.tables.DEFAULT.map(d => d.metric_lower[i]),
+      line: {width: 0}, 
+      marker: {color: "444"}, 
+      mode: "lines", 
+      name: message.fields.metric_lower[i].name, 
+      type: "scatter",
+      legendgroup: message.fields.metric_lower[i].name,
+      hoverinfo: 'skip', 
+      visible: 'legendonly',
+    };
 
-  // var data = [
-  //   {
-  //     x: message.tables.DEFAULT.map(d => d.dimension[0]),
-  //     y: message.tables.DEFAULT.map(d => d.metric_lower[0]),
-  //     type: 'bar'
-  //   },
-  //   {
-  //     x: message.tables.DEFAULT.map(d => d.dimension[0]),
-  //     y: message.tables.DEFAULT.map(d => d.metric[0]),
-  //     type: 'bar'
-  //   },
-  //   {
-  //     x: message.tables.DEFAULT.map(d => d.dimension[0]),
-  //     y: message.tables.DEFAULT.map(d => d.metric_upper[0]),
-  //     type: 'bar'
-  //   }
-  // ];
+    var trace_upper = {
+      x: message.tables.DEFAULT.map(d => d.dimension[0]),
+      y: message.tables.DEFAULT.map(d => d.metric_upper[i]),
+      line: {width: 0}, 
+      fill: "tonexty", 
+      fillcolor: "rgba(68, 68, 68, 0.3)", 
+      line: {width: 0}, 
+      marker: {color: "444"}, 
+      mode: "lines", 
+      name: message.fields.metric_upper[i].name, 
+      type: "scatter",
+      legendgroup: message.fields.metric_lower[i].name,
+      hoverinfo: 'skip', 
+      visible: 'legendonly',
+      showlegend: false
+    };
 
-  var trace1 = {
-    x: message.tables.DEFAULT.map(d => d.dimension[0]),
-    y: message.tables.DEFAULT.map(d => d.metric_lower[0]),
-    line: {width: 0}, 
-    marker: {color: "444"}, 
-    mode: "lines", 
-    name: "95% CI", 
-    type: "scatter",
-    legendgroup: '95% CI',
-    hoverinfo: 'skip', 
-    visible: 'legendonly',
-  };
+    var trace_metric = {
+      x: message.tables.DEFAULT.map(d => d.dimension[0]),
+      y: message.tables.DEFAULT.map(d => d.metric[i]),
+      customdata: message.tables.DEFAULT.map(d => [d.metric_lower[i], d.metric_upper[i]]),
+      line: {color: "rgb(31, 119, 180)"}, 
+      mode: "lines", 
+      name: message.fields.metric[i].name, 
+      type: "lines",
+      legendgroup: message.fields.metric[i].name, 
+      //hovertemplate: '<b>Estimate: %{y:,.0f}</b>; <i>95% CI:   %{customdata[0]:,.0f} - %{customdata[1]:,.0f}</i>',
+      hovertemplate: '<b>%{y:.3%}</b><i> (%{customdata[0]:.3%} - %{customdata[1]:.3%})</i>'
+    };
 
-  var trace2 = {
-    x: message.tables.DEFAULT.map(d => d.dimension[0]),
-    y: message.tables.DEFAULT.map(d => d.metric_upper[0]),
-    line: {width: 0}, 
-    fill: "tonexty", 
-    fillcolor: "rgba(68, 68, 68, 0.3)", 
-    line: {width: 0}, 
-    marker: {color: "444"}, 
-    mode: "lines", 
-    name: "Upper Bound", 
-    type: "scatter",
-    legendgroup: '95% CI',
-    hoverinfo: 'skip', 
-    visible: 'legendonly',
-    showlegend: false
-  };
+    data.push(trace_lower, trace_upper, trace_metric)
+  }
 
-  var trace3 = {
-    x: message.tables.DEFAULT.map(d => d.dimension[0]),
-    y: message.tables.DEFAULT.map(d => d.metric[0]),
-    customdata: message.tables.DEFAULT.map(d => [d.metric_lower[0], d.metric_upper[0]]),
-    line: {color: "rgb(31, 119, 180)"}, 
-    mode: "lines", 
-    name: "Measurement", 
-    type: "lines",
-    legendgroup: 'Estimate 1',
-    //hovertemplate: '<b>Estimate: %{y:,.0f}</b>; <i>95% CI:   %{customdata[0]:,.0f} - %{customdata[1]:,.0f}</i>',
-    hovertemplate: '<b>%{y:.3%}</b><i> (%{customdata[0]:.3%} - %{customdata[1]:.3%})</i>'
-  };
-
-  var data = [trace1, trace2, trace3]
   var layout = {
     height: height,
     showlegend: true,

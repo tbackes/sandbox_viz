@@ -12,13 +12,13 @@ export const message = {
           "1"
         ],
         "metric": [
-          "5"
+          "5", "6"
         ],
         "metric_lower": [
-          "4.1"
+          "4.1", "5.1"
         ],
         "metric_upper": [
-          "6.1"
+          "6", "7.1"
         ]
       },
       {
@@ -26,13 +26,13 @@ export const message = {
           "2"
         ],
         "metric": [
-          "4"
+          "4", "5"
         ],
         "metric_lower": [
-          "4"
+          "4", "4.3"
         ],
         "metric_upper": [
-          "6"
+          "4.5", "5.3"
         ]
       },
       {
@@ -40,13 +40,13 @@ export const message = {
           "3"
         ],
         "metric": [
-          "4.5"
+          "4.5", "5.5"
         ],
         "metric_lower": [
-          "4.2"
+          "4", "5"
         ],
         "metric_upper": [
-          "6.5"
+          "5.1", "5.9"
         ]
       },
       {
@@ -57,10 +57,10 @@ export const message = {
           "5.1"
         ],
         "metric_lower": [
-          "4.5"
+          "4.1"
         ],
         "metric_upper": [
-          "6.2"
+          "5.9"
         ]
       },
       {
@@ -68,13 +68,13 @@ export const message = {
           "5"
         ],
         "metric": [
-          "4"
+          "3.8"
         ],
         "metric_lower": [
-          "4"
+          "3.5"
         ],
         "metric_upper": [
-          "6"
+          "6.1"
         ]
       }
     ]
@@ -91,7 +91,41 @@ export const message = {
     "metric": [
       {
         "id": "qt_zvecch1jgc",
-        "name": "Record Count",
+        "name": "Metric 1",
+        "type": "NUMBER",
+        "concept": "METRIC"
+      },
+      {
+        "id": "qt_zvecch1jgc",
+        "name": "Metric 2",
+        "type": "NUMBER",
+        "concept": "METRIC"
+      }
+    ],
+    "metric_lower": [
+      {
+        "id": "qt_zvecc578gc",
+        "name": "Metric 1 - 95% CI (Lower)",
+        "type": "NUMBER",
+        "concept": "METRIC"
+      },
+      {
+        "id": "qt_zv235h1jgc",
+        "name": "Metric 2 - 95% CI (Lower)",
+        "type": "NUMBER",
+        "concept": "METRIC"
+      }
+    ],
+    "metric_upper": [
+      {
+        "id": "qt_zve23578gc",
+        "name": "Metric 1 - 95% CI (Upper)",
+        "type": "NUMBER",
+        "concept": "METRIC"
+      },
+      {
+        "id": "qt_zv23444jgc",
+        "name": "Metric 2 - 95% CI (Upper)",
         "type": "NUMBER",
         "concept": "METRIC"
       }
