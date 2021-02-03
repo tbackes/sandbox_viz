@@ -109,6 +109,11 @@ const drawViz = message => {
   const height = dscc.getHeight() - margin.top - margin.bottom;
   const width = dscc.getWidth() - margin.left - margin.right;
 
+  console.log('Height: ' + height)
+  console.log('Margin Top: ' + margin.top)
+  console.log('Margin Bottom: ' + margin.bottom)
+  console.log('GetHeight(): ' + dscc.getHeight())
+
   // remove the div if it already exists
   if (document.querySelector("div")) {
     let oldDiv = document.querySelector("div");
@@ -121,20 +126,20 @@ const drawViz = message => {
 
   document.body.appendChild(myDiv);
 
-  // write your visualization code here
-  console.log("I'm the callback and I was passed this data: " + JSON.stringify(message.tables.DEFAULT, null, '  '));
+  // // write your visualization code here
+  // console.log("I'm the callback and I was passed this data: " + JSON.stringify(message.tables.DEFAULT, null, '  '));
 
-  console.log('DEFAULT')
-  console.log(message.tables.DEFAULT)
+  // console.log('DEFAULT')
+  // console.log(message.tables.DEFAULT)
 
-  console.log('Dimension')
-  console.log(message.tables.DEFAULT.map(d => d.metric[0]))
-  console.log('Metric')
-  console.log(message.tables.DEFAULT.map(d => d.metric[0]))
-  console.log('Lower')
-  console.log(message.tables.DEFAULT.map(d => d.metric_lower[0]))
-  console.log('Upper')
-  console.log(message.tables.DEFAULT.map(d => d.metric_upper[0]))
+  // console.log('Dimension')
+  // console.log(message.tables.DEFAULT.map(d => d.metric[0]))
+  // console.log('Metric')
+  // console.log(message.tables.DEFAULT.map(d => d.metric[0]))
+  // console.log('Lower')
+  // console.log(message.tables.DEFAULT.map(d => d.metric_lower[0]))
+  // console.log('Upper')
+  // console.log(message.tables.DEFAULT.map(d => d.metric_upper[0]))
 
 
 
@@ -156,7 +161,7 @@ const drawViz = message => {
     }
   ];
 
-  plotly.newPlot(myDiv, data);
+  plotly.newPlot(myDiv, data, {height: height});
 };
 
 // renders locally
