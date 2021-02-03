@@ -167,22 +167,14 @@ const drawViz = message => {
     line: {width: 0}, 
     marker: {color: "444"}, 
     mode: "lines", 
-    name: "Lower Bound", 
-    type: "scatter"
+    name: "95% CI", 
+    type: "scatter",
+    legendgroup: '95% CI',
+    hoverinfo: 'skip', 
+    visible: 'legendonly',
   };
 
   var trace2 = {
-    x: message.tables.DEFAULT.map(d => d.dimension[0]),
-    y: message.tables.DEFAULT.map(d => d.metric[0]),
-    fill: "tonexty", 
-    fillcolor: "rgba(68, 68, 68, 0.3)", 
-    line: {color: "rgb(31, 119, 180)"}, 
-    mode: "lines", 
-    name: "Measurement", 
-    type: "scatter"
-  };
-
-  var trace3 = {
     x: message.tables.DEFAULT.map(d => d.dimension[0]),
     y: message.tables.DEFAULT.map(d => d.metric_upper[0]),
     line: {width: 0}, 
@@ -192,15 +184,38 @@ const drawViz = message => {
     marker: {color: "444"}, 
     mode: "lines", 
     name: "Upper Bound", 
-    type: "scatter"
+    type: "scatter",
+    legendgroup: '95% CI',
+    hoverinfo: 'skip', 
+    visible: 'legendonly',
+    showlegend: false
+  };
+
+  var trace3 = {
+    x: message.tables.DEFAULT.map(d => d.dimension[0]),
+    y: message.tables.DEFAULT.map(d => d.metric[0]),
+    customdata: message.tables.DEFAULT.map(d => [d.metric_lower[0], d.metric_upper[0]]),
+    line: {color: "rgb(31, 119, 180)"}, 
+    mode: "lines", 
+    name: "Measurement", 
+    type: "lines",
+    legendgroup: 'Estimate 1',
+    //hovertemplate: '<b>Estimate: %{y:,.0f}</b>; <i>95% CI:   %{customdata[0]:,.0f} - %{customdata[1]:,.0f}</i>',
+    hovertemplate: '<b>%{y:.3%}</b><i> (%{customdata[0]:.3%} - %{customdata[1]:.3%})</i>'
   };
 
   var data = [trace1, trace2, trace3]
   var layout = {
     height: height,
-    showlegend: false,
-    title: 'Test this out!',
-    yaxis: {title: 'Prevalence', rangemode: 'tozero'}
+    showlegend: true,
+    yaxis: {rangemode: 'tozero'},
+    legend: {
+      orientation: 'h',
+      yanchor: "bottom",
+      y: 1.02,
+      xanchor: "right",
+      x: 1
+    }
   };
 
   plotly.newPlot(myDiv, data, layout);
