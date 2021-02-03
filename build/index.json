@@ -32,7 +32,7 @@
           }
         },
         {
-          "id": "metric3",
+          "id": "metric_upper",
           "label": "CI Upper Bound",
           "type": "METRIC",
           "options": {

@@ -5,7 +5,7 @@ const local = require('./localMessage.js');
 
 // change this to 'true' for local development
 // change this to 'false' before deploying
-export const LOCAL = true;
+export const LOCAL = false;
 
 // parse the style value
 const styleVal = (message, styleId) => {
@@ -107,22 +107,23 @@ const drawViz = message => {
   const myDiv = document.createElement('div');
 
   document.body.appendChild(myDiv);
+  
+  // write your visualization code here
+  console.log("I'm the callback and I was passed this data: " + JSON.stringify(message.tables.DEFAULT, null, '  '));
 
   console.log('DEFAULT')
   console.log(message.tables.DEFAULT)
-  console.log('Dimension')
-  console.log(message.tables.DEFAULT.dimension)
-  console.log('Metric')
-  console.log(message.tables.DEFAULT.metric)
 
   console.log('Dimension')
   console.log(message.tables.DEFAULT.map(d => d.metric[0]))
   console.log('Metric')
   console.log(message.tables.DEFAULT.map(d => d.metric[0]))
+  console.log('Lower')
+  console.log(message.tables.DEFAULT.map(d => d.metric_lower[0]))
+  console.log('Upper')
+  console.log(message.tables.DEFAULT.map(d => d.metric_upper[0]))
 
 
-  // write your visualization code here
-  console.log("I'm the callback and I was passed this data: " + JSON.stringify(data, null, '  '));
 
   var data = [
     {
