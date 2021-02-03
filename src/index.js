@@ -104,10 +104,23 @@ const drawViz = message => {
   //   oldSvg.parentNode.removeChild(oldSvg);
   // }
 
+  // set margins + canvas size
+  const margin = { top: 10, bottom: 50, right: 10, left: 10 };
+  const height = dscc.getHeight() - margin.top - margin.bottom;
+  const width = dscc.getWidth() - margin.left - margin.right;
+
+  // remove the div if it already exists
+  if (document.querySelector("div")) {
+    let oldDiv = document.querySelector("div");
+    oldDiv.parentNode.removeChild(oldDiv);
+  }
+
   const myDiv = document.createElement('div');
+  myDiv.setAttribute("height", `${height}px`);
+  myDiv.setAttribute("width", `${width}px`);
 
   document.body.appendChild(myDiv);
-  
+
   // write your visualization code here
   console.log("I'm the callback and I was passed this data: " + JSON.stringify(message.tables.DEFAULT, null, '  '));
 
