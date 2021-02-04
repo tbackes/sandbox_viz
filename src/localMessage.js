@@ -6,13 +6,13 @@ export const message = {
           1
         ],
         "metric": [
-          1.5, 4.5
+          1.5, 4.5, 3
         ],
         "metric_lower": [
-          0.5, 4.2
+          0.5, 4.2, 1
         ],
         "metric_upper": [
-          2, 5
+          2, 5, 4
         ]
       },
       {
@@ -20,13 +20,13 @@ export const message = {
           2
         ],
         "metric": [
-          1.7, 2.5
+          1.7, 2.5, 3.4
         ],
         "metric_lower": [
-          1, 1.5
+          1, 1.5, 2
         ],
         "metric_upper": [
-          3, 3.1
+          3, 3.1, 6
         ]
       },
       {
@@ -34,13 +34,13 @@ export const message = {
           3
         ],
         "metric": [
-          1.5, 3
+          1.5, 3, 3
         ],
         "metric_lower": [
-          0.8, 2.9
+          0.8, 2.9, 1.6
         ],
         "metric_upper": [
-          2.5, 4.1
+          2.5, 4.1, 5
         ]
       },
       {
@@ -94,6 +94,12 @@ export const message = {
         "name": "Metric 2",
         "type": "NUMBER",
         "concept": "METRIC"
+      },
+      {
+        "id": "qt_z45cch1jgc",
+        "name": "Metric 3",
+        "type": "NUMBER",
+        "concept": "METRIC"
       }
     ],
     "metric_lower": [
@@ -106,6 +112,12 @@ export const message = {
       {
         "id": "qt_zv235h1jgc",
         "name": "Metric 2 - 95% CI (Lower)",
+        "type": "NUMBER",
+        "concept": "METRIC"
+      },
+      {
+        "id": "qt_zv23567jgc",
+        "name": "Metric 3 - 95% CI (Lower)",
         "type": "NUMBER",
         "concept": "METRIC"
       }
@@ -122,10 +134,28 @@ export const message = {
         "name": "Metric 2 - 95% CI (Upper)",
         "type": "NUMBER",
         "concept": "METRIC"
+      },
+      {
+        "id": "qt_zv235h55gc",
+        "name": "Metric 3 - 95% CI (Lower)",
+        "type": "NUMBER",
+        "concept": "METRIC"
       }
     ]
   },
   "style": {
+    "yMin": {
+      "value": null,
+      "defaultValue": null
+    },
+    "yMax": {
+      "value": 5,
+      "defaultValue": null
+    },
+    "yLabel": {
+      "value": "Test Label",
+      "defaultValue": null
+    },
     "metricLineWeight1": {
       "value": 2,
       "defaultValue": 2
@@ -155,6 +185,22 @@ export const message = {
       }
     },
     "metricShowPoints2": {
+      "value": true,
+      "defaultValue": true
+    },
+    "metricLineWeight3": {
+      "value": 2,
+      "defaultValue": 2
+    },
+    "metricColor3": {
+      "value": {
+        "color": "#f10096"
+      },
+      "defaultValue": {
+        "color": "#f10096"
+      }
+    },
+    "metricShowPoints3": {
       "value": true,
       "defaultValue": true
     }

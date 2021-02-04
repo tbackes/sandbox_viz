@@ -78,15 +78,22 @@ const drawViz = message => {
   var data = []
   var i;
   for (i=0; i<message.tables.DEFAULT[0].metric.length; i++){
+  // for (i=0; i<3; i++){
 
     // Gather all style parameters
+    // series properties
     var metricLineWeight =  message.style['metricLineWeight'+(i+1)].value
     ? message.style['metricLineWeight'+(i+1)].value
     : message.style['metricLineWeight'+(i+1)].defaultValue;
+    var metricLineWeight = 2;
 
     var metricLineColor =  message.style['metricColor'+(i+1)].value
     ? message.style['metricColor'+(i+1)].value['color']
     : message.style['metricColor'+(i+1)].defaultValue['color'];
+
+    metricLineColor = metricLineColor
+    ? metricLineColor
+    : message.theme.themeSeriesColor[i+1].color;
 
     var metricShowPoints =  message.style['metricShowPoints'+(i+1)].value
     ? message.style['metricShowPoints'+(i+1)].value
@@ -141,10 +148,45 @@ const drawViz = message => {
     data.push(trace_lower, trace_upper, trace_metric)
   }
 
+  //gather plot-level style parameters
+  var yAxisMin = message.style['yMin'].value
+  ? message.style['yMin'].value
+  : message.style['yMin'].defaultValue
+
+  var yAxisMax = message.style['yMax'].value
+  ? message.style['yMax'].value
+  : message.style['yMax'].defaultValue
+
+  var yLabel = message.style['yLabel'].value
+  ? message.style['yLabel'].value
+  : message.style['yLabel'].defaultValue
+
+  var yAxisRange = {};
+  if (yAxisMin==null & yAxisMax==null){
+    yAxisRange = {};
+  }
+  else if (yAxisMin==null){
+    yAxisRange = {range: [0, yAxisMax]};
+  }
+  else if (yAxisMax==null){
+    yAxisRange = {range: [yAxisMin, Math.max.apply(Math, message.tables.DEFAULT.map(function(d) {return Math.max(...d.metric_lower)}))]};
+  }
+  else {
+    yAxisRange = {range: [yAxisMin, yAxisMax]};
+  }
+
+  var yAxisTitle = {};
+  if (yLabel==null) {
+    yAxisTitle = {title: {}}
+  }
+  else {
+    yAxisTitle = {title: {text: yLabel}}
+  }
+
   var layout = {
     height: height,
     showlegend: true,
-    yaxis: {rangemode: 'tozero'},
+    yaxis: Object.assign({}, yAxisRange, yAxisTitle),
     legend: {
       orientation: 'h',
       yanchor: "bottom",
