@@ -105,9 +105,8 @@ const drawViz = message => {
     metricFillColor = hex_to_rgba_str(metricFillColor, 0.3);
     var metricShowPoints =  styleVal(message, 'metricShowPoints'+(i+1));
     var metricShowCI =  styleVal(message, 'metricShowCI'+(i+1));
-    console.log((i+1) + " showPoints: " + JSON.stringify(message.style['metricShowPoints'+(i+1)], null, '  '));
-    console.log((i+1) + " showCI: " + JSON.stringify(message.style['metricShowCI'+(i+1)], null, '  '));
-    console.log(metricShowCI);
+    console.log((i+1) + " metricLineWeight: " + JSON.stringify(message.style['metricLineWeight'+(i+1)], null, '  '));
+    console.log(metricLineWeight);
 
     // trace for lower bound of CI
     var trace_lower = {
@@ -147,7 +146,10 @@ const drawViz = message => {
       x: message.tables.DEFAULT.map(d => d.dimension[0]),
       y: message.tables.DEFAULT.map(d => d.metric[i]),
       customdata: message.tables.DEFAULT.map(d => [d.metric_lower[i], d.metric_upper[i]]),
-      line: {color: metricLineColor}, 
+      line: {
+        color: metricLineColor,
+        width: (metricLineWeight=='None')? 0 : metricLineWeight
+      }, 
       mode: (metricShowPoints)? 'lines+markers' : 'lines', 
       name: message.fields.metric[i].name, 
       type: "lines",
