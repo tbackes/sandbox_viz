@@ -51,20 +51,20 @@
         {
           "id": "yMin",
           "label": "Axis Min",
-          "type": "FONT_SIZE",
-          "defaultValue": null
+          "type": "TEXTINPUT",
+          "defaultValue": "null"
         },
         {
           "id": "yMax",
           "label": "Axis Max",
-          "type": "FONT_SIZE",
-          "defaultValue": null
+          "type": "TEXTINPUT",
+          "defaultValue": "null"
         },
         {
           "id": "yLabel",
           "label": "Axis Title",
           "type": "TEXTINPUT",
-          "defaultValue": null
+          "defaultValue": "null"
         }
       ]
     },
@@ -85,8 +85,7 @@
           "defaultValue": ",.0f"
         }
       ]
-    }
-    //
+    },
     {
       "id": "metricStyles1",
       "label": "Metric #1",
@@ -117,13 +116,13 @@
           "id": "metricShowPoints1",
           "label": "Show Points",
           "type": "CHECKBOX",
-          "defaultValue": "False"
+          "defaultValue": "false"
         },
         {
           "id": "metricShowCI1",
-          "label": "Hide CI #1?",
+          "label": "Show CI #1?",
           "type": "CHECKBOX",
-          "defaultValue": "True"
+          "defaultValue": "true"
         }
       ]
     },
@@ -157,13 +156,13 @@
           "id": "metricShowPoints2",
           "label": "Show Points",
           "type": "CHECKBOX",
-          "defaultValue": "False"
+          "defaultValue": "false"
         },
         {
           "id": "metricShowCI2",
-          "label": "Hide CI #2?",
+          "label": "Show CI #2?",
           "type": "CHECKBOX",
-          "defaultValue": "True"
+          "defaultValue": "true"
         }
       ]
     },
@@ -197,13 +196,13 @@
           "id": "metricShowPoints3",
           "label": "Show Points",
           "type": "CHECKBOX",
-          "defaultValue": "False"
+          "defaultValue": "false"
         },
         {
           "id": "metricShowCI3",
-          "label": "Hide CI #3?",
+          "label": "Show CI #3?",
           "type": "CHECKBOX",
-          "defaultValue": "True"
+          "defaultValue": "true"
         }
       ]
     },
@@ -237,13 +236,13 @@
           "id": "metricShowPoints4",
           "label": "Show Points",
           "type": "CHECKBOX",
-          "defaultValue": "False"
+          "defaultValue": "false"
         },
         {
           "id": "metricShowCI4",
-          "label": "Hide CI #4?",
+          "label": "Show CI #4?",
           "type": "CHECKBOX",
-          "defaultValue": "True"
+          "defaultValue": "true"
         }
       ]
     },
@@ -277,13 +276,13 @@
           "id": "metricShowPoints5",
           "label": "Show Points",
           "type": "CHECKBOX",
-          "defaultValue": "False"
+          "defaultValue": "false"
         },
         {
           "id": "metricShowCI5",
-          "label": "Hide CI #5?",
+          "label": "Show CI #5?",
           "type": "CHECKBOX",
-          "defaultValue": "True"
+          "defaultValue": "true"
         }
       ]
     },
@@ -317,13 +316,13 @@
           "id": "metricShowPoints6",
           "label": "Show Points",
           "type": "CHECKBOX",
-          "defaultValue": "False"
+          "defaultValue": "false"
         },
         {
           "id": "metricShowCI6",
-          "label": "Hide CI #6?",
+          "label": "Show CI #6?",
           "type": "CHECKBOX",
-          "defaultValue": "True"
+          "defaultValue": "true"
         }
       ]
     },
@@ -357,13 +356,13 @@
           "id": "metricShowPoints7",
           "label": "Show Points",
           "type": "CHECKBOX",
-          "defaultValue": "False"
+          "defaultValue": "false"
         },
         {
           "id": "metricShowCI7",
-          "label": "Hide CI #7?",
+          "label": "Show CI #7?",
           "type": "CHECKBOX",
-          "defaultValue": "True"
+          "defaultValue": "true"
         }
       ]
     },
@@ -397,13 +396,13 @@
           "id": "metricShowPoints8",
           "label": "Show Points",
           "type": "CHECKBOX",
-          "defaultValue": "False"
+          "defaultValue": "false"
         },
         {
           "id": "metricShowCI8",
-          "label": "Hide CI #8?",
+          "label": "Show CI #8?",
           "type": "CHECKBOX",
-          "defaultValue": "True"
+          "defaultValue": "true"
         }
       ]
     },
@@ -437,13 +436,13 @@
           "id": "metricShowPoints9",
           "label": "Show Points",
           "type": "CHECKBOX",
-          "defaultValue": "False"
+          "defaultValue": "false"
         },
         {
           "id": "metricShowCI9",
-          "label": "Hide CI #9?",
+          "label": "Show CI #9?",
           "type": "CHECKBOX",
-          "defaultValue": "True"
+          "defaultValue": "true"
         }
       ]
     }

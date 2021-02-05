@@ -5,7 +5,7 @@ const local = require('./localMessage.js');
 
 // change this to 'true' for local development
 // change this to 'false' before deploying
-export const LOCAL = true;
+export const LOCAL = false;
 
 // parse the style value
 const styleVal = (message, styleId) => {
@@ -34,8 +34,12 @@ const hex_to_rgba_str = (hex_color, opacity) => {
   return rgba
 }
 
-const get_style_parameter = (param) => {
-  return param.value ? param.value : param.defaultValue
+const isNull = (x) => {
+  return x == null || x == "null" || x == "";
+}
+
+const isNumeric = (x) => {
+  return !isNull(x) && !isNaN(x);
 }
 
 const drawViz = message => {
@@ -76,29 +80,34 @@ const drawViz = message => {
   console.log(message.tables.DEFAULT.map(d => d.metric_upper[0]))
 
   console.log('# Series: ' + message.tables.DEFAULT[0].metric.length)
-  console.log('Metric name: ' + message.fields.metric_upper[i])
+  console.log('Metric name: ' + message.fields.metric_upper[0].name)
 
 
   //gather plot-level style parameters
-  var yAxisMin = get_style_parameter(message.style['yMin']);
-  var yAxisMax = get_style_parameter(message.style['yMax']);
-  var yLabel = get_style_parameter(message.style['yLabel']);
-  var metricFmt = get_style_parameter(message.style['metricFormatString']);
-  var ciFmt = get_style_parameter(message.style['ciFormatString']);
+  var yAxisMin = styleVal(message, 'yMin');
+  var yAxisMax = styleVal(message, 'yMax');
+  var yLabel = styleVal(message, 'yLabel');
+  var metricFmt = styleVal(message, 'metricFormatString');
+  var ciFmt = styleVal(message, 'ciFormatString');
+
+  console.log('yMin: ' + !isNull(yAxisMin) + '; ' + !isNaN(yAxisMin) + '; ' + isNumeric(yAxisMin))
 
   // loop through metrics and add traces
   var data = []
   var i;
   for (i=0; i<message.tables.DEFAULT[0].metric.length; i++){
+    console.log('i: '+i)
     // Gather all style parameters
     // series properties
-    var metricLineWeight =  get_style_parameter(message.style['metricLineWeight'+(i+1)]);
-    var metricLineColor =  get_style_parameter(message.style['metricColor'+(i+1)]).color;
-    var metricFillColor =  get_style_parameter(message.style['metricFillColor'+(i+1)]).color;
-    console.log('Metric Fill '+(i+1)+': '+ JSON.stringify(metricFillColor, null, '  '));
+    var metricLineWeight =  styleVal(message, 'metricLineWeight'+(i+1));
+    var metricLineColor =  styleVal(message, 'metricColor'+(i+1));
+    var metricFillColor =  styleVal(message, 'metricFillColor'+(i+1));
     metricFillColor = hex_to_rgba_str(metricFillColor, 0.3);
-    var metricShowPoints =  get_style_parameter(message.style['metricShowPoints'+(i+1)]);
-    var metricShowCI =  get_style_parameter(message.style['metricShowCI'+(i+1)]);
+    var metricShowPoints =  styleVal(message, 'metricShowPoints'+(i+1));
+    var metricShowCI =  styleVal(message, 'metricShowCI'+(i+1));
+    console.log((i+1) + " showPoints: " + JSON.stringify(message.style['metricShowPoints'+(i+1)], null, '  '));
+    console.log((i+1) + " showCI: " + JSON.stringify(message.style['metricShowCI'+(i+1)], null, '  '));
+    console.log(metricShowCI);
 
     // trace for lower bound of CI
     var trace_lower = {
@@ -109,7 +118,7 @@ const drawViz = message => {
       mode: "lines", 
       name: message.fields.metric_lower[i].name, 
       type: "scatter",
-      legendgroup: message.fields.metric_lower[i].name,
+      legendgroup: 'ci'+i,
       hoverinfo: 'skip', 
       visible: (metricShowCI)? true : 'legendonly',
       showlegend: false
@@ -127,7 +136,7 @@ const drawViz = message => {
       mode: "lines", 
       name: message.fields.metric_upper[i].name, 
       type: "scatter",
-      legendgroup: message.fields.metric_lower[i].name,
+      legendgroup: 'ci'+i,
       hoverinfo: 'skip', 
       visible: (metricShowCI)? true : 'legendonly',
       showlegend: true
@@ -142,27 +151,30 @@ const drawViz = message => {
       mode: (metricShowPoints)? 'lines+markers' : 'lines', 
       name: message.fields.metric[i].name, 
       type: "lines",
-      legendgroup: message.fields.metric[i].name, 
+      legendgroup: 'metric'+i, 
       //hovertemplate: '<b>Estimate: %{y:,.0f}</b>; <i>95% CI:   %{customdata[0]:,.0f} - %{customdata[1]:,.0f}</i>',
       hovertemplate: '<b>%{y:'+metricFmt+'}</b><i> (%{customdata[0]:' + ciFmt + '} - %{customdata[1]:' + ciFmt + '})</i>'
     };
 
-    data.push(trace_metric, trace_lower, trace_upper)
+    data.push(trace_metric, trace_lower, trace_upper);
   }
 
   var yAxisRange = {};
-  if (yAxisMin==null & yAxisMax==null){
+  if (!isNumeric(yAxisMin) && !isNumeric(yAxisMax)){
     yAxisRange = {};
   }
-  else if (yAxisMin==null){
-    yAxisRange = {range: [0, yAxisMax]};
+  else if (!isNumeric(yAxisMin)){
+    var minValue = Math.min.apply(Math, message.tables.DEFAULT.map(function(d) {return Math.min(...d.metric_lower)}));
+    yAxisRange = {range: [Math.floor(0.9*minValue), yAxisMax]};
   }
-  else if (yAxisMax==null){
-    yAxisRange = {range: [yAxisMin, Math.max.apply(Math, message.tables.DEFAULT.map(function(d) {return Math.max(...d.metric_lower)}))]};
+  else if (!isNumeric(yAxisMax)){
+    var maxValue = Math.max.apply(Math, message.tables.DEFAULT.map(function(d) {return Math.max(...d.metric_upper)}));
+    yAxisRange = {range: [yAxisMin, Math.ceil(1.1*maxValue)]};
   }
   else {
     yAxisRange = {range: [yAxisMin, yAxisMax]};
   }
+  console.log('yAxisRange: '+JSON.stringify(yAxisRange, null, '  '));
 
   var yAxisTitle = {};
   if (yLabel==null) {
