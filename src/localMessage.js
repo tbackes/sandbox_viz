@@ -149,18 +149,34 @@ export const message = {
       "defaultValue": null
     },
     "yMax": {
-      "value": 5,
+      "value": null,
       "defaultValue": null
     },
     "yLabel": {
       "value": "Test Label",
       "defaultValue": null
     },
+    "metricFormatString": {
+      "value": ".3%",
+      "defaultValue": ",.0f"
+    },
+    "ciFormatString": {
+      "value": ",.0f",
+      "defaultValue": ",.0f"
+    },
     "metricLineWeight1": {
       "value": 2,
       "defaultValue": 2
     },
     "metricColor1": {
+      "value": {
+        "color": "#0072f0"
+      },
+      "defaultValue": {
+        "color": "#0072f0"
+      }
+    },
+    "metricFillColor1": {
       "value": {
         "color": "#0072f0"
       },
@@ -184,6 +200,14 @@ export const message = {
         "color": "#00b6cb"
       }
     },
+    "metricFillColor2": {
+      "value": {
+        "color": "#00b6cb"
+      },
+      "defaultValue": {
+        "color": "#00b6cb"
+      }
+    },
     "metricShowPoints2": {
       "value": true,
       "defaultValue": true
@@ -200,9 +224,41 @@ export const message = {
         "color": "#f10096"
       }
     },
+    "metricFillColor3": {
+      "value": {
+        "color": "#f66d00"
+      },
+      "defaultValue": {
+        "color": "#f10096"
+      }
+    },
     "metricShowPoints3": {
       "value": true,
       "defaultValue": true
+    },
+    "metricShowCI1": {
+      "value": true,
+      "defaultValue": false
+    },
+    "metricShowCI2": {
+      "value": false,
+      "defaultValue": false
+    },
+    "metricShowCI3": {
+      "value": false,
+      "defaultValue": false
+    },
+    "metricShowCI1": {
+      "value": true,
+      "defaultValue": false
+    },
+    "metricShowCI2": {
+      "value": false,
+      "defaultValue": false
+    },
+    "metricShowCI3": {
+      "value": false,
+      "defaultValue": false
     }
   },
   "theme": {

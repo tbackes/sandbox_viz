@@ -20,18 +20,22 @@ const styleVal = (message, styleId) => {
 };
 
 const hex_to_rgba_str = (hex_color, opacity) => {
-  console.log('hex_color: ' + hex_color)
-  var hex_strip = hex_color.replace(new RegExp("^#"),"")
-  console.log('hex_strip: ' + hex_strip)
-  console.log('hex_strip.length: ' + hex_strip.length)
+  console.log('hex_color: ' + hex_color);
+  var hex_strip = hex_color.replace(new RegExp("^#"),"");
+  console.log('hex_strip: ' + hex_strip);
+  console.log('hex_strip.length: ' + hex_strip.length);
   hex_strip = (hex_strip.length==3)? hex_strip+hex_strip : hex_strip;
   var rgba = 'rgba(' 
     + parseInt(hex_strip.substring(0,2), 16) + ',' 
     + parseInt(hex_strip.substring(2,4), 16) + ',' 
     + parseInt(hex_strip.substring(4,6), 16) + ','
     + opacity + ')';
-  console.log('rgba: ' + rgba)
+  console.log('rgba: ' + rgba);
   return rgba
+}
+
+const get_style_parameter = (param) => {
+  return param.value ? param.value : param.defaultValue
 }
 
 const drawViz = message => {
@@ -74,61 +78,59 @@ const drawViz = message => {
   console.log('# Series: ' + message.tables.DEFAULT[0].metric.length)
   console.log('Metric name: ' + message.fields.metric_upper[i])
 
+
+  //gather plot-level style parameters
+  var yAxisMin = get_style_parameter(message.style['yMin']);
+  var yAxisMax = get_style_parameter(message.style['yMax']);
+  var yLabel = get_style_parameter(message.style['yLabel']);
+  var metricFmt = get_style_parameter(message.style['metricFormatString']);
+  var ciFmt = get_style_parameter(message.style['ciFormatString']);
+
   // loop through metrics and add traces
   var data = []
   var i;
   for (i=0; i<message.tables.DEFAULT[0].metric.length; i++){
-  // for (i=0; i<3; i++){
-
     // Gather all style parameters
     // series properties
-    var metricLineWeight =  message.style['metricLineWeight'+(i+1)].value
-    ? message.style['metricLineWeight'+(i+1)].value
-    : message.style['metricLineWeight'+(i+1)].defaultValue;
-    var metricLineWeight = 2;
-
-    var metricLineColor =  message.style['metricColor'+(i+1)].value
-    ? message.style['metricColor'+(i+1)].value['color']
-    : message.style['metricColor'+(i+1)].defaultValue['color'];
-
-    metricLineColor = metricLineColor
-    ? metricLineColor
-    : message.theme.themeSeriesColor[i+1].color;
-
-    var metricShowPoints =  message.style['metricShowPoints'+(i+1)].value
-    ? message.style['metricShowPoints'+(i+1)].value
-    : message.style['metricShowPoints'+(i+1)].defaultValue;
+    var metricLineWeight =  get_style_parameter(message.style['metricLineWeight'+(i+1)]);
+    var metricLineColor =  get_style_parameter(message.style['metricColor'+(i+1)]).color;
+    var metricFillColor =  get_style_parameter(message.style['metricFillColor'+(i+1)]).color;
+    console.log('Metric Fill '+(i+1)+': '+ JSON.stringify(metricFillColor, null, '  '));
+    metricFillColor = hex_to_rgba_str(metricFillColor, 0.3);
+    var metricShowPoints =  get_style_parameter(message.style['metricShowPoints'+(i+1)]);
+    var metricShowCI =  get_style_parameter(message.style['metricShowCI'+(i+1)]);
 
     // trace for lower bound of CI
     var trace_lower = {
       x: message.tables.DEFAULT.map(d => d.dimension[0]),
       y: message.tables.DEFAULT.map(d => d.metric_lower[i]),
-      line: {width: 0}, 
-      marker: {color: hex_to_rgba_str(metricLineColor, 0.3)}, 
+      line: {width: 1}, 
+      marker: {color: metricFillColor}, 
       mode: "lines", 
       name: message.fields.metric_lower[i].name, 
       type: "scatter",
       legendgroup: message.fields.metric_lower[i].name,
       hoverinfo: 'skip', 
-      visible: 'legendonly',
+      visible: (metricShowCI)? true : 'legendonly',
+      showlegend: false
     };
 
     // trace for upper bound of CI
     var trace_upper = {
       x: message.tables.DEFAULT.map(d => d.dimension[0]),
       y: message.tables.DEFAULT.map(d => d.metric_upper[i]),
-      line: {width: 0}, 
+      line: {width: 1}, 
       fill: "tonexty", 
-      fillcolor: hex_to_rgba_str(metricLineColor, 0.3), 
-      line: {width: 0}, 
-      marker: {color: hex_to_rgba_str(metricLineColor, 0.3)}, 
+      fillcolor: metricFillColor, 
+      marker: {color: metricFillColor}, 
+      line: {color: metricFillColor}, 
       mode: "lines", 
       name: message.fields.metric_upper[i].name, 
       type: "scatter",
       legendgroup: message.fields.metric_lower[i].name,
       hoverinfo: 'skip', 
-      visible: 'legendonly',
-      showlegend: false
+      visible: (metricShowCI)? true : 'legendonly',
+      showlegend: true
     };
 
     // trace for metric trend line
@@ -142,24 +144,11 @@ const drawViz = message => {
       type: "lines",
       legendgroup: message.fields.metric[i].name, 
       //hovertemplate: '<b>Estimate: %{y:,.0f}</b>; <i>95% CI:   %{customdata[0]:,.0f} - %{customdata[1]:,.0f}</i>',
-      hovertemplate: '<b>%{y:.3%}</b><i> (%{customdata[0]:.3%} - %{customdata[1]:.3%})</i>'
+      hovertemplate: '<b>%{y:'+metricFmt+'}</b><i> (%{customdata[0]:' + ciFmt + '} - %{customdata[1]:' + ciFmt + '})</i>'
     };
 
-    data.push(trace_lower, trace_upper, trace_metric)
+    data.push(trace_metric, trace_lower, trace_upper)
   }
-
-  //gather plot-level style parameters
-  var yAxisMin = message.style['yMin'].value
-  ? message.style['yMin'].value
-  : message.style['yMin'].defaultValue
-
-  var yAxisMax = message.style['yMax'].value
-  ? message.style['yMax'].value
-  : message.style['yMax'].defaultValue
-
-  var yLabel = message.style['yLabel'].value
-  ? message.style['yLabel'].value
-  : message.style['yLabel'].defaultValue
 
   var yAxisRange = {};
   if (yAxisMin==null & yAxisMax==null){
@@ -187,13 +176,13 @@ const drawViz = message => {
     height: height,
     showlegend: true,
     yaxis: Object.assign({}, yAxisRange, yAxisTitle),
-    legend: {
-      orientation: 'h',
-      yanchor: "bottom",
-      y: 1.02,
-      xanchor: "right",
-      x: 1
-    }
+    // legend: {
+    //   orientation: 'h',
+    //   yanchor: "bottom",
+    //   y: 1.02,
+    //   xanchor: "right",
+    //   x: 1
+    // }
   };
 
   plotly.newPlot(myDiv, data, layout);
