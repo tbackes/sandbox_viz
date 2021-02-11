@@ -248,17 +248,17 @@ export const message = {
       "value": false,
       "defaultValue": false
     },
-    "metricShowCI1": {
-      "value": true,
-      "defaultValue": false
+    "metricFillOpacity1": {
+      "value": 0.3,
+      "defaultValue": 0.1
     },
-    "metricShowCI2": {
-      "value": false,
-      "defaultValue": false
+    "metricFillOpacity2": {
+      "value": 0.2,
+      "defaultValue": 0.1
     },
-    "metricShowCI3": {
-      "value": false,
-      "defaultValue": false
+    "metricFillOpacity3": {
+      "value": 0.5,
+      "defaultValue": 0.1
     }
   },
   "theme": {

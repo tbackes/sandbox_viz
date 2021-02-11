@@ -113,6 +113,12 @@
           }
         },
         {
+          "id": "metricFillOpacity1",
+          "label": "CI Fill Opacity 1",
+          "type": "OPACITY",
+          "defaultValue": "0.1"
+        },
+        {
           "id": "metricShowPoints1",
           "label": "Show Points",
           "type": "CHECKBOX",
@@ -125,7 +131,8 @@
           "defaultValue": "true"
         }
       ]
-    },
+    }
+    ,
     {
       "id": "metricStyles2",
       "label": "Metric #2",
@@ -153,6 +160,12 @@
           }
         },
         {
+          "id": "metricFillOpacity2",
+          "label": "CI Fill Opacity 2",
+          "type": "OPACITY",
+          "defaultValue": "0.1"
+        },
+        {
           "id": "metricShowPoints2",
           "label": "Show Points",
           "type": "CHECKBOX",
@@ -165,7 +178,8 @@
           "defaultValue": "true"
         }
       ]
-    },
+    }
+    ,
     {
       "id": "metricStyles3",
       "label": "Metric #3",
@@ -193,6 +207,12 @@
           }
         },
         {
+          "id": "metricFillOpacity3",
+          "label": "CI Fill Opacity 3",
+          "type": "OPACITY",
+          "defaultValue": "0.1"
+        },
+        {
           "id": "metricShowPoints3",
           "label": "Show Points",
           "type": "CHECKBOX",
@@ -205,7 +225,8 @@
           "defaultValue": "true"
         }
       ]
-    },
+    }
+    ,
     {
       "id": "metricStyles4",
       "label": "Metric #4",
@@ -233,6 +254,12 @@
           }
         },
         {
+          "id": "metricFillOpacity4",
+          "label": "CI Fill Opacity 4",
+          "type": "OPACITY",
+          "defaultValue": "0.1"
+        },
+        {
           "id": "metricShowPoints4",
           "label": "Show Points",
           "type": "CHECKBOX",
@@ -245,7 +272,8 @@
           "defaultValue": "true"
         }
       ]
-    },
+    }
+    ,
     {
       "id": "metricStyles5",
       "label": "Metric #5",
@@ -273,6 +301,12 @@
           }
         },
         {
+          "id": "metricFillOpacity5",
+          "label": "CI Fill Opacity 5",
+          "type": "OPACITY",
+          "defaultValue": "0.1"
+        },
+        {
           "id": "metricShowPoints5",
           "label": "Show Points",
           "type": "CHECKBOX",
@@ -285,7 +319,8 @@
           "defaultValue": "true"
         }
       ]
-    },
+    }
+    ,
     {
       "id": "metricStyles6",
       "label": "Metric #6",
@@ -313,6 +348,12 @@
           }
         },
         {
+          "id": "metricFillOpacity6",
+          "label": "CI Fill Opacity 6",
+          "type": "OPACITY",
+          "defaultValue": "0.1"
+        },
+        {
           "id": "metricShowPoints6",
           "label": "Show Points",
           "type": "CHECKBOX",
@@ -325,7 +366,8 @@
           "defaultValue": "true"
         }
       ]
-    },
+    }
+    ,
     {
       "id": "metricStyles7",
       "label": "Metric #7",
@@ -353,6 +395,12 @@
           }
         },
         {
+          "id": "metricFillOpacity7",
+          "label": "CI Fill Opacity 7",
+          "type": "OPACITY",
+          "defaultValue": "0.1"
+        },
+        {
           "id": "metricShowPoints7",
           "label": "Show Points",
           "type": "CHECKBOX",
@@ -365,7 +413,8 @@
           "defaultValue": "true"
         }
       ]
-    },
+    }
+    ,
     {
       "id": "metricStyles8",
       "label": "Metric #8",
@@ -393,6 +442,12 @@
           }
         },
         {
+          "id": "metricFillOpacity8",
+          "label": "CI Fill Opacity 8",
+          "type": "OPACITY",
+          "defaultValue": "0.1"
+        },
+        {
           "id": "metricShowPoints8",
           "label": "Show Points",
           "type": "CHECKBOX",
@@ -405,7 +460,8 @@
           "defaultValue": "true"
         }
       ]
-    },
+    }
+    ,
     {
       "id": "metricStyles9",
       "label": "Metric #9",
@@ -431,6 +487,12 @@
           "defaultValue": {
             "color": "#ff7043"
           }
+        },
+        {
+          "id": "metricFillOpacity9",
+          "label": "CI Fill Opacity 9",
+          "type": "OPACITY",
+          "defaultValue": "0.1"
         },
         {
           "id": "metricShowPoints9",

@@ -20,17 +20,13 @@ const styleVal = (message, styleId) => {
 };
 
 const hex_to_rgba_str = (hex_color, opacity) => {
-  console.log('hex_color: ' + hex_color);
   var hex_strip = hex_color.replace(new RegExp("^#"),"");
-  console.log('hex_strip: ' + hex_strip);
-  console.log('hex_strip.length: ' + hex_strip.length);
   hex_strip = (hex_strip.length==3)? hex_strip+hex_strip : hex_strip;
   var rgba = 'rgba(' 
     + parseInt(hex_strip.substring(0,2), 16) + ',' 
     + parseInt(hex_strip.substring(2,4), 16) + ',' 
     + parseInt(hex_strip.substring(4,6), 16) + ','
     + opacity + ')';
-  console.log('rgba: ' + rgba);
   return rgba
 }
 
@@ -57,27 +53,27 @@ const drawViz = message => {
 
   // create div for plotly plot
   const myDiv = document.createElement('div');
-  myDiv.setAttribute("height", `${height}px`);
-  myDiv.setAttribute("width", `${width}px`);
+  myDiv.setAttribute("height", `${dscc.getHeight()}px`);
+  myDiv.setAttribute("width", `${dscc.getWidth()}px`);
 
   document.body.appendChild(myDiv);
 
   // write your visualization code here
-  console.log("I'm the callback and I was passed this data: " + JSON.stringify(message.style, null, '  '));
-  console.log('color: ' + message.style['metricColor1'].value['color'] + '; ' + hex_to_rgba_str(message.style['metricColor1'].value['color'], 1))
-  console.log('metricLineWeight: ' + message.style['metricLineWeight1'])
+  // console.log("I'm the callback and I was passed this data: " + JSON.stringify(message.style, null, '  '));
+  // console.log('color: ' + message.style['metricColor1'].value['color'] + '; ' + hex_to_rgba_str(message.style['metricColor1'].value['color'], 1))
+  // console.log('metricLineWeight: ' + message.style['metricLineWeight1'])
 
-  // console.log('DEFAULT')
-  // console.log(message.tables.DEFAULT)
+  // // console.log('DEFAULT')
+  // // console.log(message.tables.DEFAULT)
 
-  console.log('Dimension')
-  console.log(message.tables.DEFAULT.map(d => d.metric[0]))
-  console.log('Metric')
-  console.log(message.tables.DEFAULT.map(d => d.metric[0]))
-  console.log('Lower')
-  console.log(message.tables.DEFAULT.map(d => d.metric_lower[0]))
-  console.log('Upper')
-  console.log(message.tables.DEFAULT.map(d => d.metric_upper[0]))
+  // console.log('Dimension')
+  // console.log(message.tables.DEFAULT.map(d => d.metric[0]))
+  // console.log('Metric')
+  // console.log(message.tables.DEFAULT.map(d => d.metric[0]))
+  // console.log('Lower')
+  // console.log(message.tables.DEFAULT.map(d => d.metric_lower[0]))
+  // console.log('Upper')
+  // console.log(message.tables.DEFAULT.map(d => d.metric_upper[0]))
 
   console.log('# Series: ' + message.tables.DEFAULT[0].metric.length)
   console.log('Metric name: ' + message.fields.metric_upper[0].name)
@@ -90,56 +86,31 @@ const drawViz = message => {
   var metricFmt = styleVal(message, 'metricFormatString');
   var ciFmt = styleVal(message, 'ciFormatString');
 
-  console.log('yMin: ' + !isNull(yAxisMin) + '; ' + !isNaN(yAxisMin) + '; ' + isNumeric(yAxisMin))
+  // console.log('yMin: ' + !isNull(yAxisMin) + '; ' + !isNaN(yAxisMin) + '; ' + isNumeric(yAxisMin))
 
   // loop through metrics and add traces
+  var num_ci_metrics = 
+    Math.min(
+      message.tables.DEFAULT[0].metric_lower.length, 
+      message.tables.DEFAULT[0].metric_upper.length);
+  console.log('num_ci_metrics: ' + num_ci_metrics)
   var data = []
   var i;
   for (i=0; i<message.tables.DEFAULT[0].metric.length; i++){
     console.log('i: '+i)
+
+    console.log('Fill Opacity: ' + JSON.stringify(message.style['metricFillOpacity'+(i+1)], null, '  '));
     // Gather all style parameters
     // series properties
     var metricLineWeight =  styleVal(message, 'metricLineWeight'+(i+1));
     var metricLineColor =  styleVal(message, 'metricColor'+(i+1));
-    var metricFillColor =  styleVal(message, 'metricFillColor'+(i+1));
-    metricFillColor = hex_to_rgba_str(metricFillColor, 0.3);
+    var metricFillColor =  hex_to_rgba_str(
+      styleVal(message, 'metricFillColor'+(i+1)),
+      styleVal(message, 'metricFillOpacity'+(i+1)));
     var metricShowPoints =  styleVal(message, 'metricShowPoints'+(i+1));
     var metricShowCI =  styleVal(message, 'metricShowCI'+(i+1));
-    console.log((i+1) + " metricLineWeight: " + JSON.stringify(message.style['metricLineWeight'+(i+1)], null, '  '));
-    console.log(metricLineWeight);
-
-    // trace for lower bound of CI
-    var trace_lower = {
-      x: message.tables.DEFAULT.map(d => d.dimension[0]),
-      y: message.tables.DEFAULT.map(d => d.metric_lower[i]),
-      line: {width: 1}, 
-      marker: {color: metricFillColor}, 
-      mode: "lines", 
-      name: message.fields.metric_lower[i].name, 
-      type: "scatter",
-      legendgroup: 'ci'+i,
-      hoverinfo: 'skip', 
-      visible: (metricShowCI)? true : 'legendonly',
-      showlegend: false
-    };
-
-    // trace for upper bound of CI
-    var trace_upper = {
-      x: message.tables.DEFAULT.map(d => d.dimension[0]),
-      y: message.tables.DEFAULT.map(d => d.metric_upper[i]),
-      line: {width: 1}, 
-      fill: "tonexty", 
-      fillcolor: metricFillColor, 
-      marker: {color: metricFillColor}, 
-      line: {color: metricFillColor}, 
-      mode: "lines", 
-      name: message.fields.metric_upper[i].name, 
-      type: "scatter",
-      legendgroup: 'ci'+i,
-      hoverinfo: 'skip', 
-      visible: (metricShowCI)? true : 'legendonly',
-      showlegend: true
-    };
+    // console.log((i+1) + " metricLineWeight: " + JSON.stringify(message.style['metricLineWeight'+(i+1)], null, '  '));
+    // console.log(metricLineWeight);
 
     // trace for metric trend line
     var trace_metric = {
@@ -148,7 +119,7 @@ const drawViz = message => {
       customdata: message.tables.DEFAULT.map(d => [d.metric_lower[i], d.metric_upper[i]]),
       line: {
         color: metricLineColor,
-        width: (metricLineWeight=='None')? 0 : metricLineWeight
+        width: metricLineWeight
       }, 
       mode: (metricShowPoints)? 'lines+markers' : 'lines', 
       name: message.fields.metric[i].name, 
@@ -158,7 +129,45 @@ const drawViz = message => {
       hovertemplate: '<b>%{y:'+metricFmt+'}</b><i> (%{customdata[0]:' + ciFmt + '} - %{customdata[1]:' + ciFmt + '})</i>'
     };
 
-    data.push(trace_metric, trace_lower, trace_upper);
+    data.push(trace_metric);
+
+    // Only add CI trend-lines if they are present in the data
+    if (i < num_ci_metrics) {
+      // trace for lower bound of CI
+      var trace_lower = {
+        x: message.tables.DEFAULT.map(d => d.dimension[0]),
+        y: message.tables.DEFAULT.map(d => d.metric_lower[i]),
+        line: {width: 1}, 
+        marker: {color: metricFillColor}, 
+        mode: "lines", 
+        name: message.fields.metric_lower[i].name, 
+        type: "scatter",
+        legendgroup: 'ci'+i,
+        hoverinfo: 'skip', 
+        visible: (metricShowCI)? true : 'legendonly',
+        showlegend: false
+      };
+
+      // trace for upper bound of CI
+      var trace_upper = {
+        x: message.tables.DEFAULT.map(d => d.dimension[0]),
+        y: message.tables.DEFAULT.map(d => d.metric_upper[i]),
+        line: {width: 1}, 
+        fill: "tonexty", 
+        fillcolor: metricFillColor, 
+        marker: {color: metricFillColor}, 
+        line: {color: metricFillColor}, 
+        mode: "lines", 
+        name: message.fields.metric_upper[i].name, 
+        type: "scatter",
+        legendgroup: 'ci'+i,
+        hoverinfo: 'skip', 
+        visible: (metricShowCI)? true : 'legendonly',
+        showlegend: true
+      };
+
+      data.push(trace_lower, trace_upper);
+    }
   }
 
   var yAxisRange = {};
