@@ -5,7 +5,7 @@ const local = require('./localMessage.js');
 
 // change this to 'true' for local development
 // change this to 'false' before deploying
-export const LOCAL = false;
+export const LOCAL = true;
 
 // parse the style value
 const styleVal = (message, styleId) => {
@@ -73,6 +73,11 @@ const drawViz = message => {
   const myDiv = document.createElement('div');
   myDiv.setAttribute("height", `${dscc.getHeight()}px`);
   myDiv.setAttribute("width", `${dscc.getWidth()}px`);
+  console.log('height: ' + myDiv.getAttribute("height"))
+  console.log('width: ' + myDiv.getAttribute("width"))
+  console.log('margin: ' + myDiv.getAttribute("margin"))
+  console.log('padding: ' + myDiv.getAttribute("padding"))
+  console.log('offset: ' + myDiv.getAttribute("offsetHeight"))
 
   document.body.appendChild(myDiv);
 
@@ -84,7 +89,9 @@ const drawViz = message => {
   console.log('# Series: ' + message.tables.DEFAULT[0].metric.length)
   console.log('Metric name: ' + message.fields.metric_upper[0].name)
   //gather plot-level style parameters
+  var chartTitle = styleVal(message, 'chartTitle');
   var xAxisDate = styleVal(message, 'xAxisDate');
+  var xLabel = styleVal(message, 'xLabel');
   var yAxisMin = styleVal(message, 'yMin');
   var yAxisMax = styleVal(message, 'yMax');
   var yLabel = styleVal(message, 'yLabel');
@@ -187,16 +194,6 @@ const drawViz = message => {
     }
   }
 
-  // format fo x axis
-  var xAxisMin = Math.min.apply(Math, message.tables.DEFAULT.map(function(d) {return Math.min(...d.dimension)}))
-  var xAxisMax = Math.max.apply(Math, message.tables.DEFAULT.map(function(d) {return Math.max(...d.dimension)}))
-  var xAxisRange = {};
-  console.log([xAxisMin, xAxisMax])
-  if (xAxisDate) {
-    xAxisRange = {range: [toDate(xAxisMin.toString()), toDate(xAxisMax.toString())]};
-  }
-  console.log([xAxisMin, xAxisMax])
-
   // format for y axis
   var yAxisRange = {};
   if (!isNumeric(yAxisMin) && !isNumeric(yAxisMax)){
@@ -215,20 +212,40 @@ const drawViz = message => {
   }
   console.log('yAxisRange: '+JSON.stringify(yAxisRange, null, '  '));
 
+  console.log(chartTitle)
 
-  var yAxisTitle = {};
-  if (yLabel==null) {
-    yAxisTitle = {title: {}}
+  // Chart Titles
+  var chartTitleLayout = {};
+  if (isNull(chartTitle)) {
+    chartTitleLayout = {}
   }
   else {
-    yAxisTitle = {title: {text: yLabel}}
+    chartTitleLayout = {text: chartTitle}
+  }
+
+  var yAxisTitleLayout = {};
+  if (isNull(yLabel)) {
+    yAxisTitleLayout = {title: {}}
+  }
+  else {
+    yAxisTitleLayout = {title: {text: yLabel}}
+  }
+
+  var xAxisTitleLayout = {};
+  if (isNull(xLabel)) {
+    xAxisTitleLayout = {title: {}}
+  }
+  else {
+    xAxisTitleLayout = {title: {text: xLabel}}
   }
 
   var layout = {
-    height: height,
+    height: height+60,
     showlegend: true,
-    yaxis: Object.assign({}, yAxisRange, yAxisTitle),
-    //xaxis: Object.assign({}, xAxisRange),
+    yaxis: Object.assign({}, yAxisRange, yAxisTitleLayout, {tickformat: metricFmt}),
+    xaxis: Object.assign({}, xAxisTitleLayout),
+    title: chartTitleLayout,
+    // margin: {b: 0}
     // legend: {
     //   orientation: 'h',
     //   yanchor: "bottom",

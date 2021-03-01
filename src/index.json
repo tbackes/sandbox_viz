@@ -45,6 +45,18 @@
   ],
   "style": [
     {
+      "id": "chartStyle",
+      "label": "Chart",
+      "elements": [
+        {
+          "id": "chartTitle",
+          "label": "Chart Title",
+          "type": "TEXTINPUT",
+          "defaultValue": ""
+        }
+      ]
+    },
+    {
       "id": "xAxis",
       "label": "X-Axis",
       "elements": [
@@ -53,6 +65,12 @@
           "label": "Is x-axis a date?",
           "type": "CHECKBOX",
           "defaultValue": "false"
+        },
+        {
+          "id": "xLabel",
+          "label": "Axis Title",
+          "type": "TEXTINPUT",
+          "defaultValue": ""
         }
       ]
     },

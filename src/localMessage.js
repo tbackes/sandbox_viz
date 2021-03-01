@@ -144,9 +144,17 @@ export const message = {
     ]
   },
   "style": {
+    "chartTitle": {
+      "value": "This is the title<br>Try multiline",
+      "defaultValue": ""
+    },
     "xAxisDate": {
       "value": false,
       "defaultValue": false
+    },
+    "xLabel": {
+      "value": "X axis",
+      "defaultValue": null
     },
     "yMin": {
       "value": null,
