@@ -144,6 +144,10 @@ export const message = {
     ]
   },
   "style": {
+    "xAxisDate": {
+      "value": false,
+      "defaultValue": false
+    },
     "yMin": {
       "value": null,
       "defaultValue": null

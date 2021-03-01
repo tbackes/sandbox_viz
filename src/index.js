@@ -9,7 +9,10 @@ export const LOCAL = false;
 
 // parse the style value
 const styleVal = (message, styleId) => {
-  if (typeof message.style[styleId].defaultValue === "object") {
+  // console.log(styleId)
+  // console.log(message.style[styleId])
+  // console.log(typeof message.style[styleId].defaultValue)
+  if (!!message.style[styleId].defaultValue && typeof message.style[styleId].defaultValue === "object") {
     return message.style[styleId].value.color !== undefined
       ? message.style[styleId].value.color
       : message.style[styleId].defaultValue.color;
@@ -38,6 +41,21 @@ const isNumeric = (x) => {
   return !isNull(x) && !isNaN(x);
 }
 
+const toDate = (dateString) => {
+  let year = dateString.substring(0,4)
+  let month = dateString.substring(4,6)-1
+  let day = dateString.substring(6,8)
+  let hour = dateString.substring(8,10)
+  let min = dateString.substring(10,12)
+  let sec = dateString.substring(12,14)
+
+  return new Date(year, month, day, hour, min, sec)
+}
+
+Date.prototype.addDays = function(days) {
+    return new Date(this.valueOf()+(24*60*60*days))
+}
+
 const drawViz = message => {
 
   // set margins + canvas size
@@ -63,37 +81,22 @@ const drawViz = message => {
   // console.log('color: ' + message.style['metricColor1'].value['color'] + '; ' + hex_to_rgba_str(message.style['metricColor1'].value['color'], 1))
   // console.log('metricLineWeight: ' + message.style['metricLineWeight1'])
 
-  // // console.log('DEFAULT')
-  // // console.log(message.tables.DEFAULT)
-
-  // console.log('Dimension')
-  // console.log(message.tables.DEFAULT.map(d => d.metric[0]))
-  // console.log('Metric')
-  // console.log(message.tables.DEFAULT.map(d => d.metric[0]))
-  // console.log('Lower')
-  // console.log(message.tables.DEFAULT.map(d => d.metric_lower[0]))
-  // console.log('Upper')
-  // console.log(message.tables.DEFAULT.map(d => d.metric_upper[0]))
-
   console.log('# Series: ' + message.tables.DEFAULT[0].metric.length)
   console.log('Metric name: ' + message.fields.metric_upper[0].name)
-
-
   //gather plot-level style parameters
+  var xAxisDate = styleVal(message, 'xAxisDate');
   var yAxisMin = styleVal(message, 'yMin');
   var yAxisMax = styleVal(message, 'yMax');
   var yLabel = styleVal(message, 'yLabel');
   var metricFmt = styleVal(message, 'metricFormatString');
   var ciFmt = styleVal(message, 'ciFormatString');
 
-  // console.log('yMin: ' + !isNull(yAxisMin) + '; ' + !isNaN(yAxisMin) + '; ' + isNumeric(yAxisMin))
-
   // loop through metrics and add traces
   var num_ci_metrics = 
     Math.min(
       message.tables.DEFAULT[0].metric_lower.length, 
       message.tables.DEFAULT[0].metric_upper.length);
-  console.log('num_ci_metrics: ' + num_ci_metrics)
+  console.log('num_ci_metrics: ' + num_ci_metrics);
   var data = []
   var i;
   for (i=0; i<message.tables.DEFAULT[0].metric.length; i++){
@@ -112,11 +115,26 @@ const drawViz = message => {
     // console.log((i+1) + " metricLineWeight: " + JSON.stringify(message.style['metricLineWeight'+(i+1)], null, '  '));
     // console.log(metricLineWeight);
 
+    // Design hovertemplate
+    var customdata = message.tables.DEFAULT.map(d => [d.metric_lower[i], d.metric_upper[i]]); 
+    // var hovertemplate = `<b>%{ ${metric}:${metricFmt} }</b><i> (%{ ${ciLower}:${ciFmt} } - %{ ${ciUpper}:${ciFmt} })</i>`;
+    var hovertemplate = `<b>%{y:${metricFmt}}</b><i> (%{customdata[0]:${ciFmt}} - %{customdata[1]:${ciFmt}})</i>`;
+
+    // Don't include CI in hovertemplate if no data was specified
+    if (i >= num_ci_metrics){
+      hovertemplate = `<b>%{y:${metricFmt}</b>`;
+      customdata = message.tables.DEFAULT.map(d => [null, null])
+    }
+
+    var xData = xAxisDate
+      ? message.tables.DEFAULT.map(d => toDate(d.dimension[0])) 
+      : message.tables.DEFAULT.map(d => d.dimension[0])
+
     // trace for metric trend line
     var trace_metric = {
-      x: message.tables.DEFAULT.map(d => d.dimension[0]),
+      x: xData,
       y: message.tables.DEFAULT.map(d => d.metric[i]),
-      customdata: message.tables.DEFAULT.map(d => [d.metric_lower[i], d.metric_upper[i]]),
+      customdata,
       line: {
         color: metricLineColor,
         width: metricLineWeight
@@ -125,8 +143,7 @@ const drawViz = message => {
       name: message.fields.metric[i].name, 
       type: "lines",
       legendgroup: 'metric'+i, 
-      //hovertemplate: '<b>Estimate: %{y:,.0f}</b>; <i>95% CI:   %{customdata[0]:,.0f} - %{customdata[1]:,.0f}</i>',
-      hovertemplate: '<b>%{y:'+metricFmt+'}</b><i> (%{customdata[0]:' + ciFmt + '} - %{customdata[1]:' + ciFmt + '})</i>'
+      hovertemplate
     };
 
     data.push(trace_metric);
@@ -135,7 +152,7 @@ const drawViz = message => {
     if (i < num_ci_metrics) {
       // trace for lower bound of CI
       var trace_lower = {
-        x: message.tables.DEFAULT.map(d => d.dimension[0]),
+        x: xData,
         y: message.tables.DEFAULT.map(d => d.metric_lower[i]),
         line: {width: 1}, 
         marker: {color: metricFillColor}, 
@@ -150,7 +167,7 @@ const drawViz = message => {
 
       // trace for upper bound of CI
       var trace_upper = {
-        x: message.tables.DEFAULT.map(d => d.dimension[0]),
+        x: xData,
         y: message.tables.DEFAULT.map(d => d.metric_upper[i]),
         line: {width: 1}, 
         fill: "tonexty", 
@@ -170,6 +187,17 @@ const drawViz = message => {
     }
   }
 
+  // format fo x axis
+  var xAxisMin = Math.min.apply(Math, message.tables.DEFAULT.map(function(d) {return Math.min(...d.dimension)}))
+  var xAxisMax = Math.max.apply(Math, message.tables.DEFAULT.map(function(d) {return Math.max(...d.dimension)}))
+  var xAxisRange = {};
+  console.log([xAxisMin, xAxisMax])
+  if (xAxisDate) {
+    xAxisRange = {range: [toDate(xAxisMin.toString()), toDate(xAxisMax.toString())]};
+  }
+  console.log([xAxisMin, xAxisMax])
+
+  // format for y axis
   var yAxisRange = {};
   if (!isNumeric(yAxisMin) && !isNumeric(yAxisMax)){
     yAxisRange = {};
@@ -187,6 +215,7 @@ const drawViz = message => {
   }
   console.log('yAxisRange: '+JSON.stringify(yAxisRange, null, '  '));
 
+
   var yAxisTitle = {};
   if (yLabel==null) {
     yAxisTitle = {title: {}}
@@ -199,6 +228,7 @@ const drawViz = message => {
     height: height,
     showlegend: true,
     yaxis: Object.assign({}, yAxisRange, yAxisTitle),
+    //xaxis: Object.assign({}, xAxisRange),
     // legend: {
     //   orientation: 'h',
     //   yanchor: "bottom",

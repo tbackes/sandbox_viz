@@ -45,6 +45,18 @@
   ],
   "style": [
     {
+      "id": "xAxis",
+      "label": "X-Axis",
+      "elements": [
+        {
+          "id": "xAxisDate",
+          "label": "Is x-axis a date?",
+          "type": "CHECKBOX",
+          "defaultValue": "false"
+        }
+      ]
+    },
+    {
       "id": "yAxis",
       "label": "Y-Axis",
       "elements": [
