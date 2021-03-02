@@ -1,7 +1,7 @@
 {
-  "name": "My Visualizations",
+  "name": "Continuous Error Bars",
   "organization": "MyOrg",
-  "description": "My first visualization package.",
+  "description": "Line plot with continuous error bars, generated using plotly.js.",
   "logoUrl": "https://logo",
   "organizationUrl": "https://url",
   "supportUrl": "https://url",
@@ -11,8 +11,8 @@
   "devMode": "DEVMODE_BOOL",
   "components": [
     {
-      "name": "myViz",
-      "description": "My first Community Visualization",
+      "name": "continuous-error-bars",
+      "description": "Line plot with continuous error bars.",
       "iconUrl": "https://url",
       "resource": {
         "js": "gs://tbackes_viz/sandbox_viz-dev/index.js",
